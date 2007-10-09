@@ -2,6 +2,7 @@
 //  - Write Constructor to initialize grid **
 //  - Adapt removeConnected() to array rep. -- This is going to need to check boundaries and then check neighbors
 //  - Adapt CheckLocked and CheckWin for array
+//  - Add compress() method to remove empty elements (0)
 
 using System;
 using System.Collections;
@@ -24,16 +25,15 @@ namespace bubblebreak {
 					grid[i][j] = rand.Next(4);
 				}
 			}
-			
 		}
-		
 		
 		public bubbleNode Get(int x, int y) {
            checkBounds(x,y);
            return grid[x][y];
 		}
 	
-		//method removes node and returns a reference to the removed node
+		//method removes the element by replacing the color with 0.  
+		//there is a compression method to push all elements down and to the right
 		public int remove(int x, int y) {
 			checkBounds(x,y);
 			int removed = grid[x][y];
@@ -47,36 +47,38 @@ namespace bubblebreak {
 
         public void removeConnected(x,y) {
             checkBounds(x,y);
-            
-            //if deleted is not true, then there is not more than one of this color and nothing should be removed
             bool deleted = false;
             
-            //check left
-            if(grid[x-1][y] != null && startNode.Left.Color == startNode.Color) {
-                removeConnected(startNode.Left);
-                deleted = true;
+            
+            //check left element, if it exists
+            if(x-1>0 && grid[x-1][y] == grid[x][y]) {
+            	deleted=true;
+            	removeConnected(x-1,y);
             }
-
-            //check right
-            if (startNode.Right != null && startNode.Right.Color == startNode.Color) {
-                removeConnected(startNode.Right);
-                deleted = true;
+           
+            //check right element, if it exists
+            if(x+1>0 && grid[x+1][y] == grid[x][y]) {
+            	deleted=true;
+            	removeConnected(x+1,y);
             }
-
-            //check up
-            if (startNode.Up != null && startNode.Up.Color == startNode.Color) {
-                removeConnected(startNode.Up);
-                deleted = true;
+            
+            //check up element, if it exists
+            if(y+1>0 && grid[x][y+1] == grid[x][y]) {
+            	deleted=true;
+            	removeConnected(x,y+1);
             }
-
-            //check down
-            if (startNode.Down != null && startNode.Down.Color == startNode.Color) {
-                removeConnected(startNode.Down);
-                deleted = true;
+            
+            //check down element, if it exists
+            if(y-1>0 && grid[x][y-1] == grid[x][y]) {
+            	deleted=true;
+            	removeConnected(x,y-1);
             }
-            if (deleted) {
-                remove(startNode);
-            }
+            
+            grid[x][y]=0;
+        }
+        
+        public void compress() {
+        	
         }
 
         public void checkBounds(int x, int y) {
