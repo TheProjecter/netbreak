@@ -1,11 +1,12 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 
 namespace bubblebreak {
 
 	public class bubbleGrid {
 		
 		private bubbleNode origin;
+		private int oheight;
 		private int[] height;
 		private int width;
 		
@@ -13,11 +14,12 @@ namespace bubblebreak {
 			//won't use height[0] in order for this to work properly later on
             height = new int[x+1];
 			width = x;
+			oheight = y;
 			for(int b=1; b<=x; b++) {
 				height[b]=y;
 			}
 			
-			Queue<bubbleNode> nodeQ = new Queue<bubbleNode>();
+			Queue nodeQ = new Queue();
 			
 			for(int i=0; i<y; i++) {
 				bubbleNode lastNode = new bubbleNode();
@@ -35,8 +37,8 @@ namespace bubblebreak {
 			//have the index node in the top left, and the smaller the bottom left.  If the height =1, this doesn't matter,
 			//and if they are the same height we choose arbitarily... probably just using the first one as top left...very techincal choice there :)
 			while(nodeQ.Count>1) {
-				bubbleNode next = nodeQ.Dequeue();
-                bubbleNode last = nodeQ.Dequeue();
+				bubbleNode next = (bubbleNode) nodeQ.Dequeue();
+                bubbleNode last = (bubbleNode) nodeQ.Dequeue();
                	int nh = getHeight(next);
                	int lh = getHeight(last);
                	bubbleNode first = null;
@@ -66,7 +68,7 @@ namespace bubblebreak {
 				}
 				nodeQ.Enqueue(first);
 			}
-            origin = nodeQ.Dequeue();
+            origin = (bubbleNode) nodeQ.Dequeue();
             while (origin.Down != null) {
                 origin = origin.Down;
             }
@@ -87,12 +89,12 @@ namespace bubblebreak {
             bubbleNode lastNode = origin;
 			
 			//go to the right x nodes
-			for(int i=0; i<x; i++) {
+			for(int i=1; i<=x; i++) {
 				lastNode = lastNode.Right;
 			}
 
 			//go down y nodes
-			for (int j=0; j<y; j++) {
+			for (int j=1; j<=y; j++) {
 				lastNode = lastNode.Down;
 			}
 			return lastNode;
@@ -137,8 +139,12 @@ namespace bubblebreak {
         }
 
         public void displayGrid() {
-        	
-
+        	for(int i=1; i<=width; i++){
+        		for(int j=oheight; j>0; j++) {
+        			Console.Out.Write(get(i,j).Color);
+        		}
+        		Console.Out.WriteLine();
+        	}
         }
 
         public void removeConnected(bubbleNode startNode) {

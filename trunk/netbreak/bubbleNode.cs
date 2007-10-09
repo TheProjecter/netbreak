@@ -53,6 +53,5 @@ namespace bubblebreak {
             set { down = value; }
         }
 
-	//TODO: nothing, this class should be fine as it is
 	}
 }

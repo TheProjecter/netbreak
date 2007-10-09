@@ -12,11 +12,11 @@ namespace bubblebreak
             while(play) {
                 game.displayGrid();
                 Console.Write("Input x: ");
-                int x = Console.Read(); 
-               // int x = Convert.ToInt32(input);
+                string input = Console.ReadLine(); 
+                int x = Int32.Parse(input);
                 Console.Write("Input y: ");
-                int y = Console.Read(); 
-               // int y = Convert.ToInt32(input2);
+                string input2 = Console.ReadLine(); 
+                int y = Int32.Parse(input2);
                 game.removeConnected(game.get(x,y));
                 if(game.checkWin()) {
                     Console.WriteLine("Congratulations! You won!");
