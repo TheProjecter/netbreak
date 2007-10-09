@@ -1,3 +1,8 @@
+//TODO:   
+//  - Write Constructor to initialize grid **
+//  - Adapt removeConnected() to array rep. -- This is going to need to check boundaries and then check neighbors
+//  - Adapt CheckLocked and CheckWin for array
+
 using System;
 using System.Collections;
 
@@ -5,159 +10,49 @@ namespace bubblebreak {
 
 	public class bubbleGrid {
 		
-		private bubbleNode origin;
-		private int oheight;
-		private int[] height;
+		private int[][] grid;
+		private int height;
 		private int width;
 		
 		public bubbleGrid(int x, int y) {
-			//won't use height[0] in order for this to work properly later on
-            height = new int[x+1];
+			height = y;
 			width = x;
-			oheight = y;
-			for(int b=1; b<=x; b++) {
-				height[b]=y;
-			}
 			
-			Queue nodeQ = new Queue();
-			
-			for(int i=0; i<y; i++) {
-				bubbleNode lastNode = new bubbleNode();
-				bubbleNode cFirst = lastNode;
-				for(int j=0; j<x; j++) {
-					lastNode.Right = new bubbleNode();
-					lastNode.Right.Left = lastNode;
-					lastNode = lastNode.Right;
-					Console.WriteLine(lastNode.Color);
+			Random rand = new Random();
+			for(int i=1; i<=x; i++) {
+				for(int j=1; j<=y; j++) {
+					grid[i][j] = rand.Next(4);
 				}
-				nodeQ.Enqueue(cFirst);
-			}
-			 
-			 
-			//The only fix I could come up with was checking the height of both elements, and then setting the larger height to
-			//have the index node in the top left, and the smaller the bottom left.  If the height =1, this doesn't matter,
-			//and if they are the same height we choose arbitarily... probably just using the first one as top left...very techincal choice there :)
-			while(nodeQ.Count>1) {
-				bubbleNode next = (bubbleNode) nodeQ.Dequeue();
-                bubbleNode last = (bubbleNode) nodeQ.Dequeue();
-               	int nh = getHeight(next);
-               	int lh = getHeight(last);
-               	bubbleNode first = null;
-               	if(lh==1 || nh==1) {
-               		//don't do anything if last has a height of 1
-               		first = next;
-
-               	} else if(nh >= lh) {
-                    first = last;
-                    while(last.Down != null) {
-               			last = last.Down;
-               		}
-               		bubbleNode temp = next;
-               		next = last;
-               		last = temp;
-               	} else if(lh>nh) {
-                    first = next;
-               		while(next.Down != null) {
-               			next = next.Down;
-               		}       
-               	}
-				for(int k=0; k<x; k++) {
-					last.Up = next;
-					next.Down = last;
-					last = last.Right;
-					next = next.Right;
-				}
-				nodeQ.Enqueue(first);
 			}
 			
-            origin = (bubbleNode) nodeQ.Dequeue();
-            
-            while (origin.Down != null) {
-                origin = origin.Down;
-            }
 		}
 		
-		public int getHeight(bubbleNode n) {
-			int height = 1;
-			while(n.Down!= null) {
-				height++;
-				n = n.Down;
-			}
-			return height;
-		}
 		
 		public bubbleNode Get(int x, int y) {
-            checkBounds(x,y);
-            bubbleNode lastNode = origin;
-			
-			//go to the right x nodes
-			for(int i=1; i<x && i>1; i++) {
-				lastNode = lastNode.Right;
-			}
-
-			//go down y nodes
-			for (int j=1; j<y && j>1; j++) {
-				lastNode = lastNode.Up;
-			}
-			return lastNode;
+           checkBounds(x,y);
+           return grid[x][y];
 		}
 	
 		//method removes node and returns a reference to the removed node
-		public bubbleNode remove(int x, int y) {
-
-			bubbleNode removedNode = Get(x, y);
-
-			bubbleNode u = removedNode.Up;
-			bubbleNode d = removedNode.Down;
-			bubbleNode r = removedNode.Right;
-			bubbleNode l = removedNode.Left;
-			u.Down = d;
-			d.Up = u;
-			r.Left = l;
-			l.Right = r;
-			
-			//adjust the height property of this column.  if it reaches 0, then we elminated
-			//one of the columns and width should be adjusted
-			if(--height[x] == 0) {
-				width--;
+		public int remove(int x, int y) {
+			checkBounds(x,y);
+			int removed = grid[x][y];
+			for(int i=y; i<grid[x].Length-1; i++) {
+				grid[x][i] = grid[x][i+1];
 			}
-			return removedNode;
+			grid[x][grid[x].Length-1] = 0;
+			return removed;
 		}
 
-        public void remove(bubbleNode removedNode) {
-            int y = 0;
-            int x = 0;
-            bubbleNode sNode = removedNode;
 
-            while (sNode.Down != null) {
-                y++;
-                sNode = sNode.Down;
-            }
-            while (sNode.Left != null) {
-                x++;
-                sNode = sNode.Left;
-            }
-            remove(x, y);
-        }
-
-        public void displayGrid() {
-        	for(int i=1; i<=width; i++){
-        		for(int j=oheight; j>0; j--) {
-        			if(Get(i,j) != null) {
-        				Console.Write(Get(i,j).Color);
-        			} else {
-        				Console.Write(" ");
-        			}
-        		}
-        		Console.WriteLine();
-        	}
-        }
-
-        public void removeConnected(bubbleNode startNode) {
+        public void removeConnected(x,y) {
+            checkBounds(x,y);
+            
             //if deleted is not true, then there is not more than one of this color and nothing should be removed
             bool deleted = false;
+            
             //check left
-            if(startNode.Left != null && startNode.Left.Color == startNode.Color) {
+            if(grid[x-1][y] != null && startNode.Left.Color == startNode.Color) {
                 removeConnected(startNode.Left);
                 deleted = true;
             }
@@ -219,8 +114,5 @@ namespace bubblebreak {
         public bool checkLocked() {
             return checkLocked(origin);
         }
-
-		//TODO: fix the displayGrid method.  I've fixed origin so it points to the bottom left node
-        //      now just cycle through each node and display its Color.
 	}
 }
