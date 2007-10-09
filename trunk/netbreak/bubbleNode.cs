@@ -12,7 +12,7 @@ namespace bubblebreak {
 		private int color;
 		
 		public bubbleNode() {
-			Random rand = new Random();
+			Random rand = new Random(System.DateTime.Now.Millisecond);
             left = null;
 			right = null;
 			up = null;

@@ -17,7 +17,7 @@ namespace bubblebreak
                 Console.Write("Input y: ");
                 string input2 = Console.ReadLine(); 
                 int y = Int32.Parse(input2);
-                game.removeConnected(game.get(x,y));
+                game.removeConnected(game.Get(x,y));
                 if(game.checkWin()) {
                     Console.WriteLine("Congratulations! You won!");
                     play = false;

@@ -28,6 +28,7 @@ namespace bubblebreak {
 					lastNode.Right = new bubbleNode();
 					lastNode.Right.Left = lastNode;
 					lastNode = lastNode.Right;
+					Console.WriteLine(lastNode.Color);
 				}
 				nodeQ.Enqueue(cFirst);
 			}
@@ -68,7 +69,9 @@ namespace bubblebreak {
 				}
 				nodeQ.Enqueue(first);
 			}
+			
             origin = (bubbleNode) nodeQ.Dequeue();
+            
             while (origin.Down != null) {
                 origin = origin.Down;
             }
@@ -83,19 +86,18 @@ namespace bubblebreak {
 			return height;
 		}
 		
-		public bubbleNode get(int x, int y) {
-            Console.WriteLine("x: " + x + " y: " + y);
+		public bubbleNode Get(int x, int y) {
             checkBounds(x,y);
             bubbleNode lastNode = origin;
 			
 			//go to the right x nodes
-			for(int i=1; i<=x; i++) {
+			for(int i=1; i<x && i>1; i++) {
 				lastNode = lastNode.Right;
 			}
 
 			//go down y nodes
-			for (int j=1; j<=y; j++) {
-				lastNode = lastNode.Down;
+			for (int j=1; j<y && j>1; j++) {
+				lastNode = lastNode.Up;
 			}
 			return lastNode;
 		}
@@ -103,7 +105,7 @@ namespace bubblebreak {
 		//method removes node and returns a reference to the removed node
 		public bubbleNode remove(int x, int y) {
 
-			bubbleNode removedNode = get(x, y);
+			bubbleNode removedNode = Get(x, y);
 
 			bubbleNode u = removedNode.Up;
 			bubbleNode d = removedNode.Down;
@@ -140,10 +142,14 @@ namespace bubblebreak {
 
         public void displayGrid() {
         	for(int i=1; i<=width; i++){
-        		for(int j=oheight; j>0; j++) {
-        			Console.Out.Write(get(i,j).Color);
+        		for(int j=oheight; j>0; j--) {
+        			if(Get(i,j) != null) {
+        				Console.Write(Get(i,j).Color);
+        			} else {
+        				Console.Write(" ");
+        			}
         		}
-        		Console.Out.WriteLine();
+        		Console.WriteLine();
         	}
         }
 
