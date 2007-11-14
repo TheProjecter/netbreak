@@ -1,0 +1,14 @@
+﻿Microsoft Visual Studio Solution File, Format Version 9.00
+#MonoDevelop
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "netbreak", "netbreak\netbreak.csproj", "{6A4F08F9-1982-40F7-81CD-E132B17EF970}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+EndGlobal
