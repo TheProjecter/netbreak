@@ -26,9 +26,7 @@ namespace Netbreak
             Tree tree = new Tree(evaluateBoard(grid));
             SortedList<int, int> queue = new SortedList<int,int>();
 
-            nextGrid = makeMove(
-
-
+            nextGrid = makeMove();
         }
 
         public int evaluateBoard(string[][] grid)
