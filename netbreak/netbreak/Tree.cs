@@ -4,38 +4,45 @@ using System.Text;
 
 namespace Netbreak
 {
-	class Tree
+	class Tree<T>
+        where T: IComparable
 	{
-        private TreeNode root;
+        private TreeNode<T> root;
 
         public Tree()
         {
             root = null;
         }
         
-        public void put(TreeNode Node)
+        public void put(TreeNode<T> Node)
         {
-        	Node.S = 1;
-        	meld(root, Node);
+            if (root == null)
+            {
+                root = Node;
+            }
+            else
+            {
+                Node.S = 1;
+                root = meld(root, Node);
+            }
         }
         
-        public int removeMax()
+        public T removeMax()
         {
-        	int result = root.Value;
+        	T result = root.Value;
         	Root = meld(root.Left, root.Right);
         	return result;
         }
         
-        public TreeNode meld(TreeNode x, TreeNode y)
+        public TreeNode<T> meld(TreeNode<T> x, TreeNode<T> y)
         {
 		  	if(x == null)
 		    	return y;
 		  	if(y == null) 
 		    	return x;
-		    	
-		    if(x.Value > y.Value)
+		    if(x.Value.CompareTo(y.Value) > 0)
 		    {
-		    	TreeNode temp = x;
+		    	TreeNode<T> temp = x;
 		    	x = y;
 		    	y = temp;
 		    }
@@ -45,14 +52,14 @@ namespace Netbreak
 		    if(x.Left == null)
 		    {
 		    	x.Left = x.Right;
-		    	x.Right == null;
+		    	x.Right = null;
 		    	x.S =1;
 		    } 
 		    else
 		    {
 		    	if (x.Left.S < x.Right.S)
 		   		{
-		  		TreeNode temp = x.Left;
+		  		TreeNode<T> temp = x.Left;
 		    	x.Left = x.Right;
 		    	x.Right = temp;
 		    	
@@ -62,12 +69,12 @@ namespace Netbreak
 		    return x;
         }
 
-		public void initialize(int[] a)
+		public void initialize(T[] a)
 		{
-			Queue<TreeNode> nodeQ = new Queue<TreeNode>();
-			for(int i=0; i< a.length; i++)
+			Queue<TreeNode<T>> nodeQ = new Queue<TreeNode<T>>();
+			for(int i=0; i< a.Length; i++)
 			{
-				nodeQ.Enqueue(new TreeNode(a[i]));
+				nodeQ.Enqueue(new TreeNode<T>(a[i]));
 			}
 			
 			while( nodeQ.Count != 1)
@@ -77,9 +84,9 @@ namespace Netbreak
 			root = nodeQ.Dequeue();
 		}
 		
-      	public TreeNode Root
+      	public TreeNode<T> Root
       	{
-      		get (return root; }
+      		get { return root; }
       		set { value = root; }
       	}      	
 	}

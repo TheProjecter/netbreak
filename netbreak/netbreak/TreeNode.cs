@@ -4,33 +4,34 @@ using System.Text;
 
 namespace Netbreak
 {
-	class TreeNode
+	class TreeNode<T>
+        where T: IComparable
 	{
-        private int value;
+        private T value;
         private int s;
-        private TreeNode left;
-        private TreeNode right;
+        private TreeNode<T> left;
+        private TreeNode<T> right;
 
-        public TreeNode(int val)
+        public TreeNode(T val)
         {
             this.value = val;
             Left = null;
             Right = null;
-            s = null;
+            s = 0;
         }
 
-        public int Value
+        public T Value
         {
             get { return value; }
         }
 
-        public TreeNode Left
+        public TreeNode<T> Left
         {
             get { return left; }
             set { left = value; }
         }
         
-      	public TreeNode Right
+      	public TreeNode<T> Right
         {
             get { return right; }
             set { right = value; }
