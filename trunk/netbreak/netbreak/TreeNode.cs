@@ -7,12 +7,16 @@ namespace Netbreak
 	class TreeNode
 	{
         private int value;
-        private List<TreeNode> children;
+        private int s;
+        private TreeNode left;
+        private TreeNode right;
 
         public TreeNode(int val)
         {
             this.value = val;
-            children = new List<TreeNode>();
+            Left = null;
+            Right = null;
+            s = null;
         }
 
         public int Value
@@ -20,10 +24,22 @@ namespace Netbreak
             get { return value; }
         }
 
-        public List<TreeNode> Children
+        public TreeNode Left
         {
-            get { return children; }
-            set { children = value; }
+            get { return left; }
+            set { left = value; }
         }
+        
+      	public TreeNode Right
+        {
+            get { return right; }
+            set { right = value; }
+        }
+        
+        public int S
+        {
+        	get { return s; }
+        	set { s = value; }
+		}
 	}
 }
