@@ -7,6 +7,20 @@ namespace Netbreak
 {
     class NetBreak
     {
+
+        public static void testQueue()
+        {
+            int[] a = {3, 4, 7, 6, 8, 9};
+            PriorityQueue<int> test = new PriorityQueue<int>();
+            test.initialize(a);
+
+            while (!test.isEmpty)
+            {
+                Console.WriteLine("Dequeued: " + test.Dequeue());
+            }
+
+        }
+
     	public static void newGame(Grid game)
     	{
             bool GameLoop = true;
@@ -52,6 +66,49 @@ namespace Netbreak
             }
     	}
 
+        public static void newAIGame(Grid game)
+        {
+            bool GameLoop = true;
+            AI blue = new AI(15);
+
+            while (GameLoop)
+            {
+                int[] nextMove;
+                game.displayGrid();
+                Console.WriteLine("Press enter key to have AI make next move.");
+                Console.ReadLine();
+                nextMove = blue.makeNextMove(game);
+                Console.Write("AI makes the move (" + nextMove[0] + ", " + nextMove[1] + ")");
+
+                game.removeGroup(nextMove[0], nextMove[1]);
+                game.Logger.addLog("MOVE: (" + nextMove[0] + "," + nextMove[1] + ")");
+                game.Logger.addLog("      --Points: " + game.calculatePoints());
+
+                game.compressGrid();
+
+                if (game.checkWin())
+                {
+                    GameLoop = false;
+                    Console.WriteLine("You Win!");
+                    game.Logger.addLog("GAME WIN: All bubbles eliminated");
+                    game.Logger.addLog("FINAL POINTS: " + game.Points);
+                    game.Logger.close();
+                    Console.ReadLine();
+                }
+                else if (game.checkLocked())
+                {
+                    GameLoop = false;
+                    //display final game board showing locked game
+                    game.displayGrid();
+                    Console.WriteLine("You Lose!");
+                    game.Logger.addLog("GAME LOSS: Gameboard locked!");
+                    game.Logger.addLog("FINAL POINTS: " + game.Points);
+                    game.Logger.close();
+                    Console.ReadLine();
+                }
+            }
+        }
+
         static void Main()
         {
             Console.WriteLine(@"
@@ -67,6 +124,19 @@ groups of the same bubble type (2 or more).
 
             while (menuLoop)
             {
+
+                Console.WriteLine(@"
+Game Menu:
+1) Human game.
+2) AI game.
+Choice:");
+                int inp = Int32.Parse(Console.ReadLine());
+                bool ai;
+                if (inp == 1)
+                    ai = false;
+                else
+                    ai = true;
+
                 Console.WriteLine(@"
 Game Menu:
 1) Specify a gameboard file to open.
@@ -90,18 +160,26 @@ Choice:");
                                 askfile = true;
                             }
                         }
-                        newGame(new Grid(file));
+                        if(ai)
+                            newAIGame(new Grid(file));
+                        else
+                            newGame(new Grid(file));
                         break;
 
                     case 2: int x;
                         Console.Write("Enter the dimension of the grid:");
                         x = Int32.Parse(Console.ReadLine());
-                        newGame(new Grid(x));
+                        if (ai)
+                            newAIGame(new Grid(x));
+                        else
+                            newGame(new Grid(x));
                         break;
 
                     case 3: menuLoop = false;
                         break;
-                    default: Console.WriteLine("Sorry I don't recognize that option, try agian.");
+                    case 4: testQueue();
+                        break;
+                    default: Console.WriteLine("Sorry I don't recognize that option, try again.");
                         break;
                 }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -19,6 +20,14 @@ namespace Netbreak
         private int currentRemoved;
         private int points;
 
+        public Grid(int x, int rem, int points, string[,] grid)
+        {
+            this.x = x;
+            this.currentRemoved = rem;
+            this.points = points;
+            this.grid = grid;
+
+        }
         public Grid(int x)
         {
             this.x = x;
@@ -218,6 +227,54 @@ namespace Netbreak
             currentRemoved = 0;
             return result;
         }
+
+        public PriorityQueue<Group> calculateGroupsQueue()
+        {
+            Grid temp = this.copy();
+            PriorityQueue<Group> result = new PriorityQueue<Group>();
+
+            for (int x = 1; x <= this.x; x++)
+            {
+                for (int y = 1; y <= this.x; y++)
+                {
+                    if (temp.grid[x, y] != "E")
+                    {
+                        int count = currentRemoved;
+                        temp.removeGroup(x, y);
+                        count = currentRemoved - count;
+                        result.Enqueue(new Group(x, y, count));
+                    }
+                }
+            }
+            return result;
+        }
+
+        public List<Group> calculateGroups()
+        {
+            Grid temp = this.copy();
+            List<Group> result = new List<Group>();
+
+            for (int x = 1; x <= this.x; x++)
+            {
+                for (int y = 1; y <= this.x; y++)
+                {
+                    if (temp.grid[x, y] != "E")
+                    {
+                        int count = temp.currentRemoved;
+                        temp.removeGroup(x, y);
+                        count = temp.currentRemoved - count;
+                        result.Add(new Group(x, y, count));
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Grid copy()
+        {
+            Grid copy = new Grid(this.x, this.currentRemoved, this.points, this.grid);
+            return copy;
+        }
         
 
         public MoveLogger Logger
@@ -230,5 +287,14 @@ namespace Netbreak
             get { return points; }
         }
 
+        public int X
+        {
+            get { return x; }
+        }
+
+        public int CurrentRemoved
+        {
+            get { return currentRemoved; }
+        }
     }//end class
 }//end namespace

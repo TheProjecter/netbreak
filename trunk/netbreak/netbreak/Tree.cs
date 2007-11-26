@@ -7,15 +7,19 @@ namespace Netbreak
 	class Tree<T>
         where T: IComparable
 	{
+        private int count;
+
         private TreeNode<T> root;
 
         public Tree()
         {
+            count = 0;
             root = null;
         }
         
         public void put(TreeNode<T> Node)
         {
+            count++;
             if (root == null)
             {
                 root = Node;
@@ -29,8 +33,13 @@ namespace Netbreak
         
         public T removeMax()
         {
+            if (root == null)
+            {
+                throw new Exception("PriorityQueue is empty!");
+            }
+            count--;
         	T result = root.Value;
-        	Root = meld(root.Left, root.Right);
+        	root = meld(root.Left, root.Right);
         	return result;
         }
         
@@ -40,7 +49,8 @@ namespace Netbreak
 		    	return y;
 		  	if(y == null) 
 		    	return x;
-		    if(x.Value.CompareTo(y.Value) > 0)
+
+		    if(x.Value.CompareTo(y.Value) < 0)
 		    {
 		    	TreeNode<T> temp = x;
 		    	x = y;
@@ -71,13 +81,14 @@ namespace Netbreak
 
 		public void initialize(T[] a)
 		{
+            count += a.Length;
 			Queue<TreeNode<T>> nodeQ = new Queue<TreeNode<T>>();
 			for(int i=0; i< a.Length; i++)
 			{
 				nodeQ.Enqueue(new TreeNode<T>(a[i]));
 			}
 			
-			while( nodeQ.Count != 1)
+			while( nodeQ.Count > 1)
 			{
 				nodeQ.Enqueue(meld(nodeQ.Dequeue(), nodeQ.Dequeue()));
 			}
@@ -88,6 +99,11 @@ namespace Netbreak
       	{
       		get { return root; }
       		set { value = root; }
-      	}      	
+      	}
+
+        public int Count
+        {
+            get { return count; }
+        }
 	}
 }

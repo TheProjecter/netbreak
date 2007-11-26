@@ -31,7 +31,9 @@
   <ItemGroup>
     <Compile Include="AI.cs" />
     <Compile Include="Grid.cs" />
+    <Compile Include="Move.cs" />
     <Compile Include="MoveLogger.cs" />
+    <Compile Include="MoveNode.cs" />
     <Compile Include="NetBreak.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Tree.cs" />

@@ -24,9 +24,31 @@ namespace Netbreak
             return tree.removeMax();
         }
 
+        public T Peek()
+        {
+            return tree.Root.Value;
+        }
+
+        public void EnqueueArray(T[] a)
+        {
+            Tree<T> t = new Tree<T>();
+            t.initialize(a);
+            tree.Root = tree.meld(tree.Root, t.Root);
+        }
+
         public bool isEmpty
         {
             get { return (tree.Root == null) ? true : false; }
+        }
+
+        public void initialize(T[] a)
+        {
+            tree.initialize(a);
+        }
+
+        public int Count
+        {
+            get { return tree.Count; }
         }
 	}
 }
