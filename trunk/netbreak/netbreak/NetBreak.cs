@@ -69,16 +69,16 @@ namespace Netbreak
         public static void newAIGame(Grid game)
         {
             bool GameLoop = true;
-            AI blue = new AI(15);
-
+            AI blue = new AI(4);
+            
             while (GameLoop)
             {
                 int[] nextMove;
                 game.displayGrid();
                 Console.WriteLine("Press enter key to have AI make next move.");
-                Console.ReadLine();
+                //Console.ReadLine();
                 nextMove = blue.makeNextMove(game);
-                Console.Write("AI makes the move (" + nextMove[0] + ", " + nextMove[1] + ")");
+                Console.WriteLine("AI makes the move (" + nextMove[0] + ", " + nextMove[1] + ")");
 
                 game.removeGroup(nextMove[0], nextMove[1]);
                 game.Logger.addLog("MOVE: (" + nextMove[0] + "," + nextMove[1] + ")");

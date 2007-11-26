@@ -63,7 +63,8 @@ namespace Netbreak
 
         public int CompareTo(object obj)
         {
-            double r = (double)obj;
+            MoveNode m = (MoveNode)obj;
+            double r = m.Rank;
             double result = rank - r;
             if (result > 0)
                 return 1;

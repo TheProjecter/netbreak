@@ -15,17 +15,19 @@ namespace Netbreak
 
         public int[] makeNextMove(Grid board)
         {
-            int ply = 0;
             Stack<MoveNode> moves = new Stack<MoveNode>();
             PriorityQueue<MoveNode> q = new PriorityQueue<MoveNode>();
-            q.initialize(expandNodes(board, ++ply));
-            //moves.Push(board);
+            q.initialize(expandNodes(board, 1));
+            moves.Push(q.Dequeue());
+            Console.Write("");
 
-            while (moves.Peek().Ply < depth)
+            while ((moves.Peek().Ply < depth) && !(q.isEmpty))
             {
                 MoveNode move = q.Dequeue();
                 moves.Push(move);
-                q.EnqueueArray(expandNodes(move.Board, ++ply));
+                MoveNode[] expnd = expandNodes(move.Board, move.Ply + 1);
+                if(expnd.Length > 0) 
+                    q.EnqueueArray(expnd);
             }
 
             while (moves.Peek().Ply > 1)
@@ -33,7 +35,7 @@ namespace Netbreak
                 moves.Pop();
             }
             //this will be the best move to make after expanding down to depth plys.
-            MoveNode finalMove = q.Dequeue();
+            MoveNode finalMove = moves.Pop();
             int[] result = { finalMove.Group.X, finalMove.Group.Y };
 
             return result;
@@ -48,7 +50,7 @@ namespace Netbreak
             int singles = 0;
             int remaining = 0;
 
-            while (moves.Peek().Bubbles > 0)
+            while (!(moves.isEmpty) && (moves.Peek().Bubbles > 0))
             {
                 groups++;
                 remaining += moves.Dequeue().Bubbles;
@@ -71,8 +73,11 @@ namespace Netbreak
             foreach(Group move in moves)
             {
                 Grid b = board.copy();
-                b.removeGroup(move.X, move.Y);
-                nodes.Add(new MoveNode(move, rankGrid(b), ply, b));
+                if (b.checkMove(move.X, move.Y))
+                {
+                    b.removeGroup(move.X, move.Y);
+                    nodes.Add(new MoveNode(move, rankGrid(b), ply, b));
+                }
             }
             return nodes.ToArray();
         }

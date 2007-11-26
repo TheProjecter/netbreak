@@ -272,7 +272,9 @@ namespace Netbreak
 
         public Grid copy()
         {
-            Grid copy = new Grid(this.x, this.currentRemoved, this.points, this.grid);
+            string[,] gridCopy = new string[x+2, x+2];
+            Array.Copy(grid, gridCopy, ((x+2) * (x+2)));
+            Grid copy = new Grid(x, currentRemoved, points, gridCopy);
             return copy;
         }
         

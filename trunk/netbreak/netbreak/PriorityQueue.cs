@@ -33,7 +33,9 @@ namespace Netbreak
         {
             Tree<T> t = new Tree<T>();
             t.initialize(a);
+            tree.Count = tree.Count + a.Length;
             tree.Root = tree.meld(tree.Root, t.Root);
+            
         }
 
         public bool isEmpty

@@ -104,6 +104,7 @@ namespace Netbreak
         public int Count
         {
             get { return count; }
+            set { count = value; }
         }
 	}
 }
