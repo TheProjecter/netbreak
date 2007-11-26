@@ -76,6 +76,10 @@ namespace Netbreak
                 if (b.checkMove(move.X, move.Y))
                 {
                     b.removeGroup(move.X, move.Y);
+                    //if the board is a win situation, give it an arbitrarily high score
+                    if(b.checkWin())
+                        nodes.Add(new MoveNode(move, 100000, ply, b));
+
                     nodes.Add(new MoveNode(move, rankGrid(b), ply, b));
                 }
             }
