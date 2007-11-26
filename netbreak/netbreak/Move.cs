@@ -36,12 +36,14 @@ namespace Netbreak
 
         public int CompareTo(object obj)
         {
-            int r = (int)obj;
-            double result = bubbles - r;
+            Group a = (Group)obj;
+            int r = a.Bubbles;
+            int result = bubbles - r;
             if (result > 0)
                 return 1;
             if (result < 0)
                 return -1;
+
             return 0;
         }
 
