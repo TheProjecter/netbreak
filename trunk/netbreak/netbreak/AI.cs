@@ -15,28 +15,26 @@ namespace Netbreak
 
         public int[] makeNextMove(Grid board)
         {
-            Stack<MoveNode> moves = new Stack<MoveNode>();
             PriorityQueue<MoveNode> q = new PriorityQueue<MoveNode>();
-            q.initialize(expandNodes(board, 1));
-            moves.Push(q.Dequeue());
-            Console.Write("");
+            q.initialize(expandNodes(board, null, 1));
+            MoveNode current = q.Dequeue();
 
-            while ((moves.Peek().Ply < depth) && !(q.isEmpty))
+            while ((current.Ply < depth) && !(q.isEmpty))
             {
-                MoveNode move = q.Dequeue();
-                moves.Push(move);
-                MoveNode[] expnd = expandNodes(move.Board, move.Ply + 1);
+            	//Console.WriteLine(current.Ply);
+                current = q.Dequeue();
+                MoveNode[] expnd = expandNodes(current.Board, current, (current.Ply + 1));
                 if(expnd.Length > 0) 
                     q.EnqueueArray(expnd);
             }
 
-            while (moves.Peek().Ply > 1)
+			
+            while(current.Ply > 1)
             {
-                moves.Pop();
+                current = current.PreviousMove;
             }
             //this will be the best move to make after expanding down to depth plys.
-            MoveNode finalMove = moves.Pop();
-            int[] result = { finalMove.Group.X, finalMove.Group.Y };
+            int[] result = { current.Group.X, current.Group.Y };
 
             return result;
         }
@@ -65,7 +63,7 @@ namespace Netbreak
 
         }
 
-        public MoveNode[] expandNodes(Grid board, int ply)
+        public MoveNode[] expandNodes(Grid board, MoveNode last, int ply)
         {
             List<MoveNode> nodes = new List<MoveNode>();
             List<Group> moves = board.calculateGroups();
@@ -78,9 +76,9 @@ namespace Netbreak
                     b.removeGroup(move.X, move.Y);
                     //if the board is a win situation, give it an arbitrarily high score
                     if(b.checkWin())
-                        nodes.Add(new MoveNode(move, 100000, ply, b));
+                        nodes.Add(new MoveNode(move, 100000, ply, b, last));
 
-                    nodes.Add(new MoveNode(move, rankGrid(b), ply, b));
+                    nodes.Add(new MoveNode(move, rankGrid(b), ply, b, last));
                 }
             }
             return nodes.ToArray();

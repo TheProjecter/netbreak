@@ -10,6 +10,7 @@ namespace Netbreak
         private double rank;
         private int ply;
         private Grid board;
+        private MoveNode previousMove;
 
         public MoveNode()
         {
@@ -17,14 +18,16 @@ namespace Netbreak
             rank = 0;
             ply = 0;
             board = null;
+            previousMove = null;
         }
         
-        public MoveNode(Group m, double rank, int ply, Grid board)
+        public MoveNode(Group m, double rank, int ply, Grid board, MoveNode last)
         {
             this.group = m;
             this.rank = rank;
             this.ply = ply;
             this.board = board;
+            previousMove = last;
 
         }
 
@@ -34,6 +37,7 @@ namespace Netbreak
             this.rank = rank;
             ply = 0;
             board = null;
+            previousMove = null;
         }
 
         public Group Group
@@ -57,6 +61,12 @@ namespace Netbreak
         public Grid Board
         {
             get { return board; }
+        }
+        
+        public MoveNode PreviousMove
+        {
+        	get { return previousMove; }
+        	set { previousMove = value; }
         }
 
         #region IComparable Members
