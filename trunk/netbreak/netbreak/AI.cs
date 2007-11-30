@@ -17,7 +17,7 @@ namespace Netbreak
         {
             PriorityQueue<MoveNode> q = new PriorityQueue<MoveNode>();
             q.initialize(expandNodes(board, null, 1));
-            MoveNode current = q.Dequeue();
+            MoveNode current = q.Dequeue();
 
             while ((current.Ply < depth) && !(q.isEmpty))
             {
@@ -28,13 +28,13 @@ namespace Netbreak
                     q.EnqueueArray(expnd);
             }
 
-			
             while(current.Ply > 1)
             {
                 current = current.PreviousMove;
             }
             //this will be the best move to make after expanding down to depth plys.
             int[] result = { current.Group.X, current.Group.Y };
+            Console.WriteLine("rank: " + current.Rank);
 
             return result;
         }
@@ -43,7 +43,7 @@ namespace Netbreak
         {
             double rank = 0;
             PriorityQueue<Group> moves = board.calculateGroupsQueue();
-            Group largest = moves.Dequeue();
+            int largest = moves.Dequeue().Bubbles;
             int groups = 0;
             int singles = 0;
             int remaining = 0;
@@ -57,7 +57,15 @@ namespace Netbreak
             singles = moves.Count;
             remaining += singles;
 
-            rank = (remaining * .25) + (largest.Bubbles*.35) - (singles*.15);
+            rank = (remaining * .25) + (largest * .35) - (singles * .50);
+        /*
+         * Experimental:
+         * rank = ((remaining / (board.X * board.X)) * .25) + ((largest / remaining) * .35) - ((singles / remaining) * .4);
+         *
+         * rank = (100 + (largest * .5)) - ((singles * .15) + (remaining * .35));
+         *
+         * rank = ((board.X * board.X)/(remaining+1)) + (largest * .35) - (singles * .35);
+         */
 
             return rank;
 
@@ -74,11 +82,12 @@ namespace Netbreak
                 if (b.checkMove(move.X, move.Y))
                 {
                     b.removeGroup(move.X, move.Y);
+                    b.compressGrid();
                     //if the board is a win situation, give it an arbitrarily high score
                     if(b.checkWin())
                         nodes.Add(new MoveNode(move, 100000, ply, b, last));
-
-                    nodes.Add(new MoveNode(move, rankGrid(b), ply, b, last));
+                    else
+                        nodes.Add(new MoveNode(move, rankGrid(b), ply, b, last));
                 }
             }
             return nodes.ToArray();
