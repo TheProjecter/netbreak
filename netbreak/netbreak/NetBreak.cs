@@ -7,20 +7,6 @@ namespace Netbreak
 {
     class NetBreak
     {
-
-        public static void testQueue()
-        {
-            int[] a = {3, 4, 7, 6, 8, 9};
-            PriorityQueue<int> test = new PriorityQueue<int>();
-            test.initialize(a);
-
-            while (!test.isEmpty)
-            {
-                Console.WriteLine("Dequeued: " + test.Dequeue());
-            }
-
-        }
-
     	public static void newGame(Grid game)
     	{
             bool GameLoop = true;
@@ -69,7 +55,7 @@ namespace Netbreak
         public static void newAIGame(Grid game)
         {
             bool GameLoop = true;
-            AI blue = new AI(4);
+            AI blue = new AI(7);
             
             while (GameLoop)
             {
@@ -176,8 +162,6 @@ Choice:");
                         break;
 
                     case 3: menuLoop = false;
-                        break;
-                    case 4: testQueue();
                         break;
                     default: Console.WriteLine("Sorry I don't recognize that option, try again.");
                         break;
