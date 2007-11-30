@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-
+using System.Text;
 namespace Netbreak
 {
     class AI
@@ -21,11 +20,14 @@ namespace Netbreak
 
             while ((current.Ply < depth) && !(q.isEmpty))
             {
-            	//Console.WriteLine(current.Ply);
-                current = q.Dequeue();
-                MoveNode[] expnd = expandNodes(current.Board, current, (current.Ply + 1));
-                if(expnd.Length > 0) 
-                    q.EnqueueArray(expnd);
+            	MoveNode next = q.Dequeue();
+            	if(next.Rank> current.Rank)
+            	{
+                	current = next;
+               		MoveNode[] expnd = expandNodes(current.Board, current, (current.Ply + 1));
+                	if(expnd.Length > 0) 
+                    	q.EnqueueArray(expnd);
+              	}
             }
 
             while(current.Ply > 1)
@@ -57,16 +59,20 @@ namespace Netbreak
             singles = moves.Count;
             remaining += singles;
 
-            rank = (remaining * .25) + (largest * .35) - (singles * .50);
-        /*
-         * Experimental:
-         * rank = ((remaining / (board.X * board.X)) * .25) + ((largest / remaining) * .35) - ((singles / remaining) * .4);
-         *
-         * rank = (100 + (largest * .5)) - ((singles * .15) + (remaining * .35));
-         *
-         * rank = ((board.X * board.X)/(remaining+1)) + (largest * .35) - (singles * .35);
-         */
-
+           // rank = (remaining * .25) + (largest * .35) - (singles * .50);
+       
+         // Experimental:
+         // rank = ((remaining / (board.X * board.X)) * .25) + ((largest / remaining) * .35) - ((singles / remaining) * .4);
+         
+         // rank = (100 + (largest * .5)) - ((singles * .15) + (remaining * .35));
+         
+         if(board.checkWin())
+         	rank = 100000;
+         else if (board.checkLocked())
+         	rank = -100000;
+         else
+        	rank = ((board.X * board.X)/(remaining+1) * 100) - (singles/(groups+1));
+       
             return rank;
 
         }
@@ -83,11 +89,7 @@ namespace Netbreak
                 {
                     b.removeGroup(move.X, move.Y);
                     b.compressGrid();
-                    //if the board is a win situation, give it an arbitrarily high score
-                    if(b.checkWin())
-                        nodes.Add(new MoveNode(move, 100000, ply, b, last));
-                    else
-                        nodes.Add(new MoveNode(move, rankGrid(b), ply, b, last));
+					nodes.Add(new MoveNode(move, rankGrid(b), ply, b, last));
                 }
             }
             return nodes.ToArray();

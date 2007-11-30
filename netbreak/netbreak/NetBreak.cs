@@ -55,7 +55,7 @@ namespace Netbreak
         public static void newAIGame(Grid game)
         {
             bool GameLoop = true;
-            AI blue = new AI(7);
+            AI blue = new AI(15);
             
             while (GameLoop)
             {
