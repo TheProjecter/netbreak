@@ -65,14 +65,18 @@ namespace Netbreak
          // rank = ((remaining / (board.X * board.X)) * .25) + ((largest / remaining) * .35) - ((singles / remaining) * .4);
          
          // rank = (100 + (largest * .5)) - ((singles * .15) + (remaining * .35));
+         //locked:
+         //rank = ((board.X * board.X)) - singles;
          
          if(board.checkWin())
-         	rank = 100000;
+         	rank = ((board.X * board.X)/(remaining+1) * 100) *100;
          else if (board.checkLocked())
-         	rank = -100000;
+         	rank  = -10000000;
          else
         	rank = ((board.X * board.X)/(remaining+1) * 100) - (singles/(groups+1));
        
+       		if(rank == ( ((board.X * board.X)/(remaining+1) * 100) *100))
+       			Console.WriteLine("found win condition");
             return rank;
 
         }
