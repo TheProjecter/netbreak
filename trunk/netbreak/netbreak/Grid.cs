@@ -19,6 +19,7 @@ namespace Netbreak
         private MoveLogger logger;
         private int currentRemoved;
         private int points;
+        private int colors;
 
         public Grid(int x, int rem, int points, string[,] grid)
         {
@@ -30,6 +31,7 @@ namespace Netbreak
         }
         public Grid(int x)
         {
+        	colors = 4;
             this.x = x;
          	logger = new MoveLogger();
 	        
@@ -75,11 +77,18 @@ namespace Netbreak
         	string[] lines = file.Split('\n');
         	this.x = Int32.Parse(lines[0]);
         	grid = new string[x+2, x+2];
+			List<string> list = new List<string>();
         	
         	for(int i=0; i<=x+1; i++) 
         	{
         		for(int j=0; j<=x+1; j++) 
         		{
+        			list.Sort();
+        			if((list.BinarySearch(grid[i,j]) < 0) && grid[i,j] != null)
+        				list.Insert(0, grid[i, j]);
+
+
+
         			if (i == 0 || j == 0 || (i == x + 1) || (j == x + 1))
 	               	{
 	            		grid[i, j] = "E";
@@ -89,6 +98,7 @@ namespace Netbreak
 	               	}
         		}
         	}
+        	colors = list.Count;
         }
 
         public bool checkWin()
@@ -239,9 +249,9 @@ namespace Netbreak
                 {
                     if (temp.grid[x, y] != "E")
                     {
-                        int count = currentRemoved;
+                        int count = temp.currentRemoved;
                         temp.removeGroup(x, y);
-                        count = currentRemoved - count;
+                        count = temp.currentRemoved - count;
                         result.Enqueue(new Group(x, y, count));
                     }
                 }
@@ -298,5 +308,11 @@ namespace Netbreak
         {
             get { return currentRemoved; }
         }
-    }//end class
-}//end namespace
+        
+        public int Colors
+       	{
+       		get { return colors; }
+       	}
+        
+    }
+}

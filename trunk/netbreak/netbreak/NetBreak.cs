@@ -17,7 +17,8 @@ namespace Netbreak
                 Console.Write("Enter Move ( as 'x y' ): ");
                 string move = Console.ReadLine();
                 string[] coord = move.Split(' ');
-                if(game.checkMove(Int32.Parse(coord[0]), Int32.Parse(coord[1]))) {
+                Int32 val;
+                if((coord.Length==2) && (Int32.TryParse(coord[0], out val) && Int32.TryParse(coord[1], out val)) && game.checkMove(Int32.Parse(coord[0]), Int32.Parse(coord[1]))) {
                 
                     game.removeGroup(Int32.Parse(coord[0]), Int32.Parse(coord[1]));
                     game.Logger.addLog("MOVE: (" + coord[0] + "," + coord[1] + ")");
@@ -55,15 +56,46 @@ namespace Netbreak
         public static void newAIGame(Grid game)
         {
             bool GameLoop = true;
+            bool list  = false;
             AI blue = new AI(50);
+            Stack<MoveNode> moves = new Stack<MoveNode>();
+            
+            if((game.Colors <= 5 && game.X <7) || (game.Colors < 4 && game.X <= 15))
+            {
+           		MoveNode move = blue.solveTree(game);
+           		if(move != null)
+           		{
+           			list = true;
+           			
+           			while(move != null)
+           			{
+           				moves.Push(move);
+           				move = move.PreviousMove;
+           			}
+           			
+           		}
+            }
             
             while (GameLoop)
             {
                 int[] nextMove;
                 game.displayGrid();
-                Console.WriteLine("Press enter key to have AI make next move.");
-                //Console.ReadLine();
-                nextMove = blue.makeNextMove(game);
+                
+                
+
+				if(list)
+				{
+					nextMove = new int[2];
+					MoveNode cur = moves.Pop();
+					nextMove[0] = cur.Group.X;
+					nextMove[1] = cur.Group.Y;
+					
+				}
+				else
+				{
+                	nextMove = blue.makeNextMove(game);
+                }
+                
                 Console.WriteLine("AI makes the move (" + nextMove[0] + ", " + nextMove[1] + ")");
 
                 game.removeGroup(nextMove[0], nextMove[1]);
